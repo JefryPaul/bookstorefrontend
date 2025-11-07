@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
-import { HiMiniMagnifyingGlass } from 'react-icons/hi2'; 
+import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
 
 function LandingPage() {
@@ -33,15 +33,15 @@ function LandingPage() {
                         />
                     </div>
                 </div>
-            </div> 
+            </div>
 
             <section className='md:px-40 p-5 flex flex-col justify-center items-center'>
-                <h1>NEW ARRIVALS</h1> 
-                <h1>Explore our latest collection</h1> 
+                <h1>NEW ARRIVALS</h1>
+                <h1>Explore our latest collection</h1>
                 <div className='md:grid grid-cols-4 w-full mt-5'>
                     <div className='p-3'>
                         <div className='shadow p-3 rounded'>
-                            <img height={"300px"} width={"100%"} src="https://m.media-amazon.com/images/I/81tFwEZOFcL._SY245_.jpg" alt="" /> 
+                            <img height={"300px"} width={"100%"} src="https://m.media-amazon.com/images/I/81tFwEZOFcL._SY245_.jpg" alt="" />
                             <div className='text-center mt-3'>
                                 <p className='font-bold text-2xl'>Book Name</p>
                                 <p className='font-bold text-2xl'>Author</p>
@@ -49,12 +49,63 @@ function LandingPage() {
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
 
                 <div className='text-center my-5'>
                     <Link to={'all-books'}><button className='px-3 py-2 bg-blue-900 text-white hover:border hover:border-blue-900 hover:text-blue-900 hover:bg-white'>Explore More</button></Link>
                 </div>
             </section>
+
+
+
+            {/* authors */}
+            <section className="mb-20">
+                <div className="md:grid grid-cols-2 mx-20 mt-10 text-center">
+                    <div>
+                        <h1 className="text-xl">Featured Authors</h1>
+                        <h1 className="text-2xl mb-4">
+                            Captivates With Every Word
+                        </h1>
+                        <p className="text-justify mb-3">
+                            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Omnis
+                            suscipit recusandae corporis nostrum laudantium tempore laboriosam
+                            tempora ea provident id minima, magni blanditiis officia aperiam,
+                            ab officiis et labore aliquam.lorem Lorem ipsum dolor si
+                            consectetur adipisicing elit. Ex, assumenda maxime ducimus
+                            inventore, et odit iusto facilis ullam at alias laborum deleniti
+                            sapiente. Nesciunt vel eveniet incidunt sequi accusamus! Nisi.
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi
+
+                        </p>
+                        <p className="text-justify">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit dicta repellendus fugit odio, reprehenderit delectus alias quibusdam beatae laborum fugiat quo, dolorum qui quasi mollitia id, porro perspiciatis inventore iure! Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure accusantium expedita assumenda provident similique ad perspiciatis a placeat molestias sint? Quae, eaque eum accusamus debitis modi aliquam. Voluptas, ullam aspernatur?</p>
+                    </div>
+
+                    <div className="mx-30">
+                        <img width={"450px"} src="https://i.guim.co.uk/img/media/d619fa31c267a9e7191e1ec40d4cd67f3c629924/37_0_592_355/master/592.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=cb3f45028ee0669e2b22a5af37d459bd" alt="" />
+                    </div>
+                </div>
+            </section>
+
+            {/* testimonials */}
+
+            <section>
+                <div className="text-center mb-3">
+                    <h1 className="text-lg">TESTIMONIALS</h1>
+                    <h1 className="text-2xl">See What Others Are Saying</h1>
+                </div>
+                <div className="flex justify-center mb-5">
+                    <div className="bg-white shadow-xl rounded-full p-4  text-center">
+                        <img className="mx-auto rounded-full object-cover " width={"200px"} src="https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-confident-beautiful-girl-wearing-formal-office-dress-white-british-woman-png-image_12502570.png" alt="" />
+                        <p className="mt-3">Tressa Joseph</p>
+
+                    </div>
+
+                </div>
+                <p className="mx-60 mb-5">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis magnam incidunt architecto? Consectetur quos, ut tempore minima enim dignissimos. Optio consequatur sequi numquam minus, labore aliquid id a tempora dolorem. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit sapiente laudantium unde fugit, veritatis aliquid accusamus ratione dolores quod nulla officiis est eos dolorem perspiciatis soluta harum doloribus laboriosam pariatur!</p>
+            </section>
+
+
+
 
             <Footer />
         </>
