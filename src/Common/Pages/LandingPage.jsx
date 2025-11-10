@@ -52,13 +52,12 @@ function LandingPage() {
                 </div>
 
                 <div className='text-center my-5'>
-                    <Link to={'all-books'}><button className='px-3 py-2 bg-blue-900 text-white hover:border hover:border-blue-900 hover:text-blue-900 hover:bg-white'>Explore More</button></Link>
+                    <Link to={'all-books'}><button className='px-3 py-2 bg-blue-900 text-white border border-transparent hover:border-blue-900 hover:text-blue-900 hover:bg-white'>Explore More</button></Link>
                 </div>
             </section>
 
 
 
-            {/* authors */}
             <section className="mb-20">
                 <div className="md:grid grid-cols-2 mx-20 mt-10 text-center">
                     <div>
@@ -86,7 +85,6 @@ function LandingPage() {
                 </div>
             </section>
 
-            {/* testimonials */}
 
             <section>
                 <div className="text-center mb-3">
