@@ -3,9 +3,28 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
+import { registerAPI } from "../../Services/allAPI";
+
 
 
 function Auth({ register }) {
+
+  const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
+
+  console.log(userDetails);
+
+  const HandleRegister = async () => {
+    const { username, email, password } = userDetails
+
+    if (!username || !email || !password) {
+      alert("Fill the form completely")
+    } else {
+      const result = await registerAPI(userDetails) 
+      console.log(result);
+    }
+  }
+
+
   const [pass, setPass] = useState(false);
   return (
     <>
@@ -33,6 +52,8 @@ function Auth({ register }) {
                 <div className="my-5">
                   <label htmlFor="">UserName</label>
                   <input
+                    value={userDetails?.username}
+                    onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })}
                     type="text"
                     placeholder="Username"
                     className="bg-white p-2 w-full rounded mt-2 placeholder-gray-500 text-black"
@@ -42,6 +63,8 @@ function Auth({ register }) {
               <div className="my-5">
                 <label htmlFor="">Email</label>
                 <input
+                  value={userDetails?.email}
+                  onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })}
                   type="email"
                   placeholder="Email"
                   className="bg-white p-2 w-full rounded mt-2 placeholder-gray-500 text-black"
@@ -52,6 +75,8 @@ function Auth({ register }) {
                 <label htmlFor="">Password</label>
                 <div className="flex items-center">
                   <input
+                    value={userDetails?.password}
+                    onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })}
                     type={pass ? "text" : "password"}
                     placeholder="Password"
                     className="bg-white p-2 w-full rounded placeholder-gray-500 text-black"
@@ -70,6 +95,7 @@ function Auth({ register }) {
                 {register ? (
                   <button
                     type="button"
+                    onClick={HandleRegister}
                     className="bg-green-700 p-2 w-full rounded"
                   >
                     Register
