@@ -60,6 +60,32 @@ function Auth({ register }) {
     } else {
       const result = await loginAPI({ email, password })
       console.log(result);
+
+      if (result.status == 200) {
+        toast.success("Login Successfull")
+        sessionStorage.setItem("existingUser", JSON.stringify(result.data.existingUser))
+        sessionStorage.setItem("token", result.data.token)
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+        navigate("/")
+      } else if (result.status == 401) {
+        toast.warning(result.response.data)
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+      } else {
+        toast.error("something Went Wrong!!!")
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+      }
     }
   }
 
