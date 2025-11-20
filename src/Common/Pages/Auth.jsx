@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { FaRegEye } from "react-icons/fa";
-import { registerAPI } from "../../Services/allAPI";
+import { loginAPI, registerAPI } from "../../Services/allAPI";
+import { toast } from 'react-toastify';
 
 
 
@@ -13,13 +14,51 @@ function Auth({ register }) {
 
   console.log(userDetails);
 
+  const navigate = useNavigate()
+
   const HandleRegister = async () => {
     const { username, email, password } = userDetails
-
     if (!username || !email || !password) {
-      alert("Fill the form completely")
+      toast.info("Fill the form completely")
     } else {
-      const result = await registerAPI(userDetails) 
+      const result = await registerAPI(userDetails)
+      console.log(result);
+
+      if (result.status == 200) {
+        toast.success("Registered successfully")
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+        navigate("/login")
+      } else if (result.status == 404) {
+        toast.warning(result.response.data)
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+      } else {
+        toast.error("Something Went Wrong")
+        setUserDetails({
+          username: "",
+          email: "",
+          password: ""
+        })
+      }
+    }
+  }
+
+
+
+  const handleLogin = async () => {
+    const { email, password } = userDetails
+
+    if (!email || !password) {
+      toast.info("Fill the form completely")
+    } else {
+      const result = await loginAPI({ email, password })
       console.log(result);
     }
   }
@@ -103,6 +142,7 @@ function Auth({ register }) {
                 ) : (
                   <button
                     type="button"
+                    onClick={handleLogin}
                     className="bg-green-700 p-2 w-full rounded"
                   >
                     Login
