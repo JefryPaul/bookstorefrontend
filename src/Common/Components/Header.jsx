@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
-import { FaFacebookSquare, FaInstagramSquare, FaRegUser } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import { FaFacebookSquare, FaInstagramSquare, FaRegUser, FaUserCheck } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 import { TiThMenu } from 'react-icons/ti';
 import { Link } from 'react-router-dom';
 
-function Header() { 
+function Header() {
 
     const [listStatus, setListStatus] = useState(false)
+    const [dropdownStatus, setDropdownStatus] = useState(false);
+    const [token, setToken] = useState(""); 
+    const [username, setUsername] = useState("") 
+    console.log(token);
+    console.log(username);
+
+    useEffect(() => {
+        if (sessionStorage.getItem("token")) {
+            setToken(sessionStorage.getItem("token"))
+        } 
+
+        if (sessionStorage.getItem("existingUser")) {
+            const name = JSON.parse(sessionStorage.getItem("existingUser")) 
+            setUsername(name.username)
+        }
+    }, [])
 
     return (
         <>
@@ -29,12 +45,40 @@ function Header() {
                     <FaInstagramSquare className='me-3 text-2xl hover:text-pink-500 cursor-pointer' />
                     <FaXTwitter className='me-3 text-2xl hover:text-blue-400 cursor-pointer' />
                     <FaFacebookSquare className='me-3 text-2xl hover:text-blue-600 cursor-pointer' />
-                    <Link to="/login">
-                        <button className='flex items-center border border-black rounded px-3 py-2 ms-3 hover:bg-black hover:text-white transition'>
-                            <FaRegUser className='me-2' /> Login
-                        </button>
-                    </Link>
+
+                    {!token ?
+
+                        <div className='ms-3' >
+                            <Link to={"/login"}><button className='cursor-pointer flex px-4 py-3 border border-black rounded items-center'><FaRegUser className='me-3' />Login</button></Link>
+                        </div>
+
+                        :
+                        <div className="relative inline-block">
+                            <button onClick={() => setDropdownStatus(!dropdownStatus)} className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold  inset-ring-1 inset-ring-white/5 hover:bg-white/20">
+
+                                <img src="https://static.vecteezy.com/system/resources/previews/048/926/084/non_2x/silver-membership-icon-default-avatar-profile-icon-membership-icon-social-media-user-image-illustration-vector.jpg" width={"30px"} height={"30px"} alt='' style={{ borderRadius: "50%" }} />
+                                <p>{username}</p>
+
+                            </button>
+
+                            {dropdownStatus &&
+                                <div className='absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg'>
+                                    <Link to={"/profile"}><button className='block px-4 py-2 text-sm text-gray-70'>Profile</button></Link>
+
+                                    <button className='block px-4 py-2 text-sm text-gray-70'>Logout</button>
+                                </div>
+                            }
+                        </div>
+
+
+                    }
+
+
                 </div>
+
+
+                
+
             </div>
 
             <nav className='w-full bg-gray-900 text-white p-5 md:flex md:justify-center md:items-center'>
