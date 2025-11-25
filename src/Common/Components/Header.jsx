@@ -8,18 +8,18 @@ function Header() {
 
     const [listStatus, setListStatus] = useState(false)
     const [dropdownStatus, setDropdownStatus] = useState(false);
-    const [token, setToken] = useState(""); 
-    const [username, setUsername] = useState("") 
-    console.log(token);
-    console.log(username);
+    const [token, setToken] = useState("");
+    const [username, setUsername] = useState("")
+    // console.log(token);
+    // console.log(username);
 
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
             setToken(sessionStorage.getItem("token"))
-        } 
+        }
 
         if (sessionStorage.getItem("existingUser")) {
-            const name = JSON.parse(sessionStorage.getItem("existingUser")) 
+            const name = JSON.parse(sessionStorage.getItem("existingUser"))
             setUsername(name.username)
         }
     }, [])
@@ -54,11 +54,18 @@ function Header() {
 
                         :
                         <div className="relative inline-block">
-                            <button onClick={() => setDropdownStatus(!dropdownStatus)} className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white/10 px-3 py-2 text-sm font-semibold  inset-ring-1 inset-ring-white/5 hover:bg-white/20">
-
-                                <img src="https://static.vecteezy.com/system/resources/previews/048/926/084/non_2x/silver-membership-icon-default-avatar-profile-icon-membership-icon-social-media-user-image-illustration-vector.jpg" width={"30px"} height={"30px"} alt='' style={{ borderRadius: "50%" }} />
-                                <p>{username}</p>
-
+                            <button
+                                onClick={() => setDropdownStatus(!dropdownStatus)}
+                                className="inline-flex items-center gap-2 bg-black/10 px-3 py-2 rounded-md"
+                            >
+                                <img
+                                    src="https://static.vecteezy.com/system/resources/previews/048/926/084/non_2x/silver-membership-icon-default-avatar-profile-icon-membership-icon-social-media-user-image-illustration-vector.jpg"
+                                    width="30"
+                                    height="30"
+                                    alt=""
+                                    style={{ borderRadius: "50%" }}
+                                />
+                                <span className="text-sm font-semibold">{username}</span>
                             </button>
 
                             {dropdownStatus &&
@@ -77,7 +84,7 @@ function Header() {
                 </div>
 
 
-                
+
 
             </div>
 
@@ -86,12 +93,41 @@ function Header() {
                     <button onClick={() => setListStatus(!listStatus)}>
                         <TiThMenu className='text-3xl' />
                     </button>
-                    <Link to="/login">
-                        <button className='flex items-center border border-white rounded px-3 py-2 hover:bg-white hover:text-black transition'>
-                            <FaRegUser className='me-2' /> Login
-                        </button>
-                    </Link>
+
+                    {!token ? (
+                        <Link to="/login">
+                            <button className='flex items-center border border-white rounded px-3 py-2 hover:bg-white hover:text-black transition'>
+                                <FaRegUser className='me-2' /> Login
+                            </button>
+                        </Link>
+                    ) : (
+                        <div className="relative inline-block">
+                            <button
+                                onClick={() => setDropdownStatus(!dropdownStatus)}
+                                className="inline-flex items-center gap-2 bg-white/10 px-3 py-2 rounded-md"
+                            >
+                                <img
+                                    src="https://static.vecteezy.com/system/resources/previews/048/926/084/non_2x/silver-membership-icon-default-avatar-profile-icon-membership-icon-social-media-user-image-illustration-vector.jpg"
+                                    width="30"
+                                    height="30"
+                                    alt=""
+                                    style={{ borderRadius: "50%" }}
+                                />
+                                <span className="text-sm font-semibold">{username}</span>
+                            </button>
+
+                            {dropdownStatus && (
+                                <div className="absolute right-0 z-10 mt-2 w-40 rounded-md bg-white shadow-lg">
+                                    <Link to="/profile">
+                                        <button className='block w-full text-left px-4 py-2 text-sm text-black'>Profile</button>
+                                    </Link>
+                                    <button className='block w-full text-left px-4 py-2 text-sm text-black'>Logout</button>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
+
 
                 <ul className={listStatus ? 'flex flex-col' : 'md:flex justify-center items-center hidden'}>
                     <li><Link to="/" className='mx-4 hover:text-yellow-400 transition'>Home</Link></li>
