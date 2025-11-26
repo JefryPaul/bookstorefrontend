@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { use, useEffect, useState } from 'react';
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import { HiMiniMagnifyingGlass } from 'react-icons/hi2';
 import { Link } from 'react-router-dom';
+import { getHomeBookAPI } from '../../Services/allAPI';
 
 function LandingPage() {
+
+    const [homeBook, setHomeBook] = useState([])
+
+    const getHomeBooks = async () => {
+        const result = await getHomeBookAPI()
+        console.log(result);
+        setHomeBook(result.data)
+    }
+
+    useEffect(() => {
+        getHomeBooks()
+    }, [])
+
     return (
         <>
             <Header />
@@ -35,24 +49,42 @@ function LandingPage() {
                 </div>
             </div>
 
-            <section className='md:px-40 p-5 flex flex-col justify-center items-center'>
-                <h1>NEW ARRIVALS</h1>
-                <h1>Explore our latest collection</h1>
-                <div className='md:grid grid-cols-4 w-full mt-5'>
-                    <div className='p-3'>
-                        <div className='shadow p-3 rounded'>
-                            <img height={"300px"} width={"100%"} src="https://m.media-amazon.com/images/I/81tFwEZOFcL._SY245_.jpg" alt="" />
-                            <div className='text-center mt-3'>
-                                <p className='font-bold text-2xl'>Book Name</p>
-                                <p className='font-bold text-2xl'>Author</p>
-                                <p className='font-bold'>₹ 599</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <section className="md:px-40 p-5 flex flex-col justify-center items-center">
+                <h1>New Arrivals</h1>
+                <h1>Explore Our Latest Collection</h1>
 
-                <div className='text-center my-5'>
-                    <Link to={'all-books'}><button className='px-3 py-2 bg-blue-900 text-white border border-transparent hover:border-blue-900 hover:text-blue-900 hover:bg-white'>Explore More</button></Link>
+                {homeBook.length > 0 ?
+                    <div className="md:grid grid-cols-4 w-full mt-5">
+
+                        {homeBook.map((item, index) => (
+                            <div key={index} className="p-3">
+                                <div className="shadow p-3 rounded">
+                                    <img
+                                        height={"300px"}
+                                        width={"100%"}
+                                        src={item.imageUrl}
+                                        alt=""
+                                    />
+                                    <div className="text-center mt-3">
+                                        <p className="font-bold text-2xl">{item.title}</p>
+                                        <p className="font-bold text-xl">{item.author}</p>
+                                        <p className="font-bold">₹{item.price}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                    </div>
+                    :
+                    <p>Loading.......</p>
+                }
+
+                <div className="text-center my-5">
+                    <Link to={"/all-books"}>
+                        <button className="px-3 py-2 rounded bg-blue-900 text-white hover:border hover:border-blue-900 hover:text-blue-900 hover:bg-white">
+                            Explore More
+                        </button>
+                    </Link>
                 </div>
             </section>
 

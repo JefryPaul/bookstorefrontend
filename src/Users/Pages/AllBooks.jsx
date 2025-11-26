@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from '../../Common/Components/Header'
 import Footer from '../../Common/Components/Footer'
 import { Link } from 'react-router-dom'
 
-function AllBooks() {
+function AllBooks() { 
+
+  const [token, setToken] = useState("")
+
   return (
     <>
       <Header />
