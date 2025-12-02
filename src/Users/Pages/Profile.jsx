@@ -4,7 +4,12 @@ import Footer from "../../Common/Components/Footer";
 import { MdVerified } from "react-icons/md";
 import { FaRegEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { addBookAPI } from "../../Services/allAPI"; 
+import { addBookAPI } from "../../Services/allAPI";
+import { getUserBooksAPI } from "../../Services/allAPI";
+import { deleteAUserAddedBookAPI } from "../../Services/allAPI";
+import { getAllUserBroughtBooksAPI } from "../../Services/allAPI";
+
+
 
 function Profile() {
   const [sellBookStatus, setSellBookStatus] = useState(true);
@@ -12,8 +17,12 @@ function Profile() {
   const [preview, setPreview] = useState("");
   const [purchaseStatus, setPurchaseStatus] = useState(false);
   const [allUploadImages, setAllUploadImages] = useState([]);
-  const [token, setToken] = useState("") 
+  const [token, setToken] = useState("")
   const [username, setUsername] = useState("")
+  const [userAddedBook, setUserAddedBook] = useState([])
+  const [deleteBookStatus, setDeleteBookStatus] = useState("")
+  const [purchasedBooks, setPurchasedBooks] = useState([]);
+
 
   const [bookDetails, setBookDetails] = useState({
     title: "",
@@ -123,13 +132,93 @@ function Profile() {
   };
 
 
+  const getUserAddedBooks = async () => {
+
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+
+    const result = await getUserBooksAPI(reqHeader)
+    console.log(result);
+    setUserAddedBook(result.data);
+
+  }
+
+
+  const getUserPurchasedBooks = async () => {
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`,
+    };
+
+    try {
+      const result = await getAllUserBroughtBooksAPI(reqHeader);
+      console.log(result);
+
+      if (result.status === 200) {
+        setPurchasedBooks(result.data);
+      } else {
+        toast.error("Failed to fetch purchase history");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server error while fetching purchase history");
+    }
+  };
+
+
+
+
+  const handleDeleteBook = async (id) => {
+    try {
+
+      const result = await deleteAUserAddedBookAPI(id);
+
+      if (result.status == 200) {
+        toast.success("Book Deleted Successfully");
+        setDeleteBookStatus(true);
+      } else {
+        toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Server Error");
+    }
+  };
+
+
+
+
+  useEffect(() => {
+    if (bookStatus == true) {
+      getUserAddedBooks()
+    }
+  }, [bookStatus])
+
+  useEffect(() => {
+    if (deleteBookStatus) {
+      getUserAddedBooks();
+      setDeleteBookStatus(false);
+    }
+  }, [deleteBookStatus]);
+
+
+  useEffect(() => {
+    if (purchaseStatus === true) {
+      getUserPurchasedBooks();
+    }
+  }, [purchaseStatus]);
+
+
+
+
+
   useEffect(() => {
     if (sessionStorage.getItem("token")) {
       setToken(sessionStorage.getItem("token"))
-    } 
+    }
 
     if (sessionStorage.getItem("existingUser")) {
-      const name = JSON.parse(sessionStorage.getItem("existingUser")) 
+      const name = JSON.parse(sessionStorage.getItem("existingUser"))
       setUsername(name.username)
     }
   }, [])
@@ -208,9 +297,7 @@ function Profile() {
         </p>
         <p
           onClick={() => {
-            setSellBookStatus(false),
-              setBookStatus(false),
-              setPurchaseStatus(true);
+            setSellBookStatus(false), setBookStatus(false), setPurchaseStatus(true);
           }}
           className={
             purchaseStatus
@@ -415,70 +502,131 @@ function Profile() {
       {/* Book Status */}
       {bookStatus && (
         <div className="p-10 my-20 shadow rounded">
-          <div className="bg-gray-200 p-5 rounded mt-4">
-            <div className="md:grid grid-cols-[3fr_1fr]">
-              <div className="px-4">
-                <h1 className="text-2xl">Book Title</h1>
-                <h2>Author Name</h2>
-                <h3 className="text-blue-600">₹500</h3>
-                <p>
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Quibusdam similique minima itaque blanditiis nisi libero nam
-                  sunt illo, perferendis est vel. Explicabo aut excepturi
-                  dolores quod minima voluptatem ex ea?
-                </p>
-                <div className="flex mt-5">
-                  <img
-                    src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png"
-                    className="w-full"
-                    style={{ height: "70px", width: "70px" }}
-                    alt=""
-                  />
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png"
-                    className="w-full"
-                    style={{ height: "70px", width: "70px" }}
-                    alt=""
-                  />
-                  <img
-                    src="https://juststickers.in/wp-content/uploads/2017/08/seal-of-approval.png"
-                    className="w-full"
-                    style={{ height: "70px", width: "70px" }}
-                    alt=""
-                  />
+          {userAddedBook.length > 0 ? (
+            userAddedBook.map((book, index) => (
+              <div key={index} className="bg-gray-200 p-5 rounded mt-4">
+                <div className="md:grid grid-cols-[3fr_1fr]">
+                  <div className="px-4">
+                    <h1 className="text-2xl">{book.title}</h1>
+                    <h2>{book.author}</h2>
+                    <h3 className="text-blue-600">₹{book.price}</h3>
+                    <p>{book.abstract}</p>
+
+                    <div className="flex mt-5">
+                      {book.status === "pending" && (
+                        <img
+                          src="https://www.psdstamps.com/wp-content/uploads/2022/04/round-pending-stamp-png.png"
+                          style={{ height: "70px", width: "70px" }}
+                          alt=""
+                        />
+                      )}
+
+                      {book.status === "rejected" && (
+                        <img
+                          src="https://cdn-icons-png.flaticon.com/512/6188/6188726.png"
+                          style={{ height: "70px", width: "70px" }}
+                          alt=""
+                        />
+                      )}
+
+                      {book.status === "approved" && (
+                        <img
+                          src="https://juststickers.in/wp-content/uploads/2017/08/seal-of-approval.png"
+                          style={{ height: "70px", width: "70px" }}
+                          alt=""
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="px-4 mt-4 md:mt-4">
+                    <img
+                      src={book.imageUrl}
+                      alt=""
+                      className="w-full"
+                      style={{ height: "250px", objectFit: "cover" }}
+                    />
+
+                    <div className="flex justify-end mt-4">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteBook(book._id)}
+                        className="p-2 rounded bg-red-600 text-white hover:bg-gray-200 hover:text-red-600 hover:border hover:border-red-600"
+                      >
+                        Delete
+                      </button>
+
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="px-4 mt-4 md:mt-4">
-                <img
-                  src="https://edit.org/images/cat/book-covers-big-2019101610.jpg"
-                  alt=""
-                  className="w-full"
-                  style={{ height: "250px" }}
-                />
-                <div className="flex justify-end mt-4">
-                  <button
-                    type="button"
-                    className="p-2 rounded bg-red-600 text-white hover:bg-gray-200 hover:text-red-600 hover:border hover:border-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
+            ))
+          ) : (
+            <div className="flex justify-center items-center flex-col">
+              <img
+                style={{ width: "200px", height: "200px" }}
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMuFlmxinymbZB0Btt2vdYDeuFwZUiSVwdGQ&s"
+                alt=""
+              />
+              <p className="text-2xl text-red-600">No Book Added yet</p>
             </div>
-          </div>
-          <div className="flex justify-center items-center flex-col">
-            <img
-              style={{ width: "200px", height: "200px" }}
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMuFlmxinymbZB0Btt2vdYDeuFwZUiSVwdGQ&s"
-              alt=""
-            />
-            <p className="text-2xl text-red-600">No Book Added yet</p>
-          </div>
+          )}
         </div>
       )}
 
-      {/* purchase history */}
-      {purchaseStatus && <div>Purchase History</div>}
+
+
+      {purchaseStatus && (
+        <div className="p-10 my-20 shadow rounded">
+          <h1 className="text-2xl font-bold mb-5">Purchase History</h1>
+
+          {purchasedBooks.length > 0 ? (
+            purchasedBooks.map((book, index) => (
+              <div key={index} className="bg-gray-200 p-5 rounded mt-4">
+                <div className="md:grid grid-cols-[3fr_1fr]">
+
+                  <div className="px-4">
+                    <h1 className="text-2xl">{book.title}</h1>
+                    <h2>{book.author}</h2>
+                    <h3 className="text-green-700 font-bold">₹{book.price}</h3>
+                    <p className="mt-3">{book.abstract}</p>
+
+                    <p className="text-sm mt-3 text-gray-600">
+                      Purchased by: <span className="font-bold">{username}</span>
+                    </p>
+
+                    <p className="text-sm text-gray-600">
+                      Status: <span className="font-bold text-blue-600">Completed</span>
+                    </p>
+                  </div>
+
+                  <div className="px-4 mt-4 md:mt-4">
+                    <img
+                      src={book.imageUrl}
+                      alt=""
+                      className="w-full"
+                      style={{ height: "250px", objectFit: "cover" }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="flex justify-center items-center flex-col">
+              <img
+                style={{ width: "200px", height: "200px" }}
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMuFlmxinymbZB0Btt2vdYDeuFwZUiSVwdGQ&s"
+                alt=""
+              />
+              <p className="text-2xl text-red-600 mt-3">No Purchase History Found</p>
+            </div>
+          )}
+        </div>
+      )}
+
+
+
+
 
       <Footer />
     </>

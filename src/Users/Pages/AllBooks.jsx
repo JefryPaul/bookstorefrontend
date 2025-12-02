@@ -10,6 +10,9 @@ function AllBooks() {
   const [allBooks, setAllBooks] = useState([])
   const [allCategory, setAllCategory] = useState([]) 
   const [tempBooks, setTempBooks] = useState([]) 
+  const [searchKey, setSearchKey] = useState("") 
+  
+  console.log(searchKey);
 
 
 
@@ -18,7 +21,7 @@ function AllBooks() {
       "Authorization": `Bearer ${userToken}`
     }
     try {
-      const result = await getAllBooksAPI(reqHeader)
+      const result = await getAllBooksAPI(searchKey, reqHeader)
       console.log(result);
 
       if (result.status === 200) {
@@ -55,7 +58,7 @@ function AllBooks() {
       setToken(userToken)
       getAllBooks(userToken)
     }
-  }, [])
+  }, [searchKey])
 
   return (
     <>
@@ -63,7 +66,7 @@ function AllBooks() {
       <div className='flex justify-center items-center flex-col my-5'>
         <h1 className='text-3xl font-bold my-5'>COLLECTIONS</h1>
         <div className='flex my-5'>
-          <input className='p-2 border-3 border-gray-200 text-black w-100 placeholder-gray-500' type="text" placeholder='Search By Title' />
+          <input onChange={(e) => setSearchKey(e.target.value)} className='p-2 border-3 border-gray-200 text-black w-100 placeholder-gray-500' type="text" placeholder='Search By Title' />
           <button className='bg-blue-900 text-white p-2 hover:bg-white hover:text-blue-900 hover:border hover:border-blue-800'>Search</button>
         </div>
       </div>
@@ -80,7 +83,7 @@ function AllBooks() {
               </div>
             ))
             }
-            <div className='mt-5'>
+            <div onClick={() => categoryFilter("No Filter")} className='mt-5'>
               <input name='filter' id='nofilter' type="radio" />
               <label className='ms-2' htmlFor="nofilter">No Filter</label>
             </div>
