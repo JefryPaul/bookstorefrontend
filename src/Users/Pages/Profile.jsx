@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Header from "../../Common/Components/Header";
 import Footer from "../../Common/Components/Footer";
 import { MdVerified } from "react-icons/md";
@@ -8,6 +8,8 @@ import { addBookAPI } from "../../Services/allAPI";
 import { getUserBooksAPI } from "../../Services/allAPI";
 import { deleteAUserAddedBookAPI } from "../../Services/allAPI";
 import { getAllUserBroughtBooksAPI } from "../../Services/allAPI";
+import EditProfile from "../Components/EditProfile";
+import { userProfileUpdate } from "../../context/ContextShare";
 
 
 
@@ -22,6 +24,9 @@ function Profile() {
   const [userAddedBook, setUserAddedBook] = useState([])
   const [deleteBookStatus, setDeleteBookStatus] = useState("")
   const [purchasedBooks, setPurchasedBooks] = useState([]);
+
+  const { updateProfileStatus } = useContext(userProfileUpdate)
+
 
 
   const [bookDetails, setBookDetails] = useState({
@@ -221,7 +226,7 @@ function Profile() {
       const name = JSON.parse(sessionStorage.getItem("existingUser"))
       setUsername(name.username)
     }
-  }, [])
+  }, [updateProfileStatus])
 
   return (
     <>
@@ -250,10 +255,7 @@ function Profile() {
           <MdVerified className="text-blue-500 ms-3 text-xl" />
         </div>
         <div>
-          <button className="flex px-4 py-3 font-bold border border-blue-200 text-blue-600">
-            <FaRegEdit className="mt-1 me-2" />
-            Edit
-          </button>
+          <EditProfile />
         </div>
       </div>
 
