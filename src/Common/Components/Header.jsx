@@ -3,6 +3,8 @@ import { FaFacebookSquare, FaInstagramSquare, FaRegUser, FaUserCheck } from 'rea
 import { FaXTwitter } from 'react-icons/fa6';
 import { TiThMenu } from 'react-icons/ti';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
 
@@ -11,7 +13,17 @@ function Header() {
     const [token, setToken] = useState("");
     const [username, setUsername] = useState("")
     // console.log(token);
-    // console.log(username);
+    // console.log(username); 
+
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("existingUser");
+        toast.success("Logged out successfully");
+        navigate("/");
+    };
 
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
@@ -72,7 +84,7 @@ function Header() {
                                 <div className='absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-lg'>
                                     <Link to={"/profile"}><button className='block px-4 py-2 text-sm text-gray-70'>Profile</button></Link>
 
-                                    <button className='block px-4 py-2 text-sm text-gray-70'>Logout</button>
+                                    <button onClick={handleLogout} className='block px-4 py-2 text-sm text-gray-70'>Logout</button>
                                 </div>
                             }
                         </div>
@@ -121,7 +133,7 @@ function Header() {
                                     <Link to="/profile">
                                         <button className='block w-full text-left px-4 py-2 text-sm text-black'>Profile</button>
                                     </Link>
-                                    <button className='block w-full text-left px-4 py-2 text-sm text-black'>Logout</button>
+                                    <button onClick={handleLogout} className='block w-full text-left px-4 py-2 text-sm text-black'>Logout</button>
                                 </div>
                             )}
                         </div>
