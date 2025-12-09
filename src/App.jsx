@@ -14,6 +14,8 @@ import ViewBook from "./Users/Pages/ViewBook"
 import { Routes, Route } from 'react-router-dom'
 import PreLoader from "./Common/Pages/PreLoader"
 import { ToastContainer } from 'react-toastify';
+import PaymentSuccess from "./Users/Pages/PaymentSuccess"
+import PaymentError from "./Users/Pages/PaymentError"
 
 
 
@@ -40,6 +42,9 @@ function App() {
         <Route path={'careers'} element={<Careers />} />
         <Route path={'profile'} element={<Profile />} />
         <Route path={'view-books/:id'} element={<ViewBook />} />
+        <Route path={'payment-success'} element={<PaymentSuccess />} />
+        <Route path={'payment-error'} element={<PaymentError />} />
+
 
         <Route path={'admin-home'} element={<AdminHome />} />
         <Route path={'admin-careers'} element={<AdminCareers />} />
