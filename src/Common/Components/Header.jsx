@@ -5,6 +5,8 @@ import { TiThMenu } from "react-icons/ti";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { userProfileUpdate } from '../../context/ContextShare'
+import { userAuthContext } from "../../context/AuthContext";
+
 
 function UserHeader() {
 
@@ -16,13 +18,14 @@ function UserHeader() {
 
     const { updateProfileStatus } = useContext(userProfileUpdate);
 
+
     const navigate = useNavigate();
 
     const handleLogout = () => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("existingUser");
         toast.success("Logged out successfully");
-        navigate("/");
+        navigate("login");
     };
 
     useEffect(() => {
@@ -82,7 +85,7 @@ function UserHeader() {
                                     }
                                     width="30"
                                     height="30"
-                                    alt="Profile"
+                                    alt=""
                                     className="rounded-full"
                                 />
                                 <span className="text-sm font-semibold">{username}</span>

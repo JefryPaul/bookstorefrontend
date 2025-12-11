@@ -6,6 +6,8 @@ import { googleLoginAPI, loginAPI, registerAPI } from "../../Services/allAPI";
 import { toast } from "react-toastify";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from 'jwt-decode'
+import { useContext } from "react";
+import { userAuthContext } from "../../context/AuthContext";
 
 function Auth({ register }) {
   const [userDetails, setUserDetails] = useState({
@@ -13,6 +15,8 @@ function Auth({ register }) {
     email: "",
     password: "",
   });
+
+  const { setAuthorisedUser } = useContext(userAuthContext)
 
   const [pass, setPass] = useState(false);
   const navigate = useNavigate();
@@ -57,6 +61,8 @@ function Auth({ register }) {
         sessionStorage.setItem("token", result.data.token);
 
         setUserDetails({ username: "", email: "", password: "" });
+        // setAuthorisedUser(true);
+
         navigate("/");
       } else if (result.status === 401) {
         toast.warning(result.response.data);
@@ -84,6 +90,7 @@ function Auth({ register }) {
 
         sessionStorage.setItem("existingUser", JSON.stringify(user));
         sessionStorage.setItem("token", result.data.token);
+        // setAuthorisedUser(true)
 
         toast.success("Login Successful");
 

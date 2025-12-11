@@ -2,7 +2,11 @@ import React from 'react'
 import { FaPowerOff } from 'react-icons/fa' 
 import {Link} from 'react-router-dom'
 
-function AdminHeader() {
+function AdminHeader() { 
+
+
+    
+
     return (
         <>
             <div className='grid grid-cols-3 p-3 items-center'>

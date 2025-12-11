@@ -46,6 +46,10 @@ export const updateUserProfileAPI = async (reqBody, reqHeader) => {
     return await commonAPI("PUT", `${SERVERURL}/update-user-profile`, reqBody, reqHeader);
 };
 
+export const makePaymentAPI = async (reqBody, reqHeader) => {
+    return await commonAPI("PUT", `${SERVERURL}/payment`, reqBody, reqHeader);
+};
+
 
 
 

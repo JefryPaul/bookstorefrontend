@@ -3,8 +3,10 @@ import Header from '../../Common/Components/Header'
 import Footer from '../../Common/Components/Footer'
 import { FaBackward, FaRegEye } from 'react-icons/fa'
 import { useParams } from 'react-router-dom'
-import { getABookAPI } from '../../Services/allAPI'
+import { getABookAPI, makePaymentAPI } from '../../Services/allAPI'
 import SERVERURL from '../../Services/serverURL'
+import { loadStripe } from "@stripe/stripe-js";
+
 
 function ViewBook() {
 
@@ -25,6 +27,31 @@ function ViewBook() {
   }
 
   console.log(bookDetails);
+
+  const handlePurchase = async () => {
+    const stripe = await loadStripe('pk_test_51ScgVZJA6pTsuTpK9c05tb06KmE40Gq7h7XUwDLsalpTK6I0ulQJw0Ne0hmKQ3P3IeoTAv9a35GOJeAMDPhAjesy00d8rpbVVB');
+    console.log(stripe); 
+
+    const token = sessionStorage.getItem("token") 
+    if (token) {
+      const reqHeader = {
+        "Authorization": `Bearer ${token}`
+      } 
+
+      try {
+        const result = await makePaymentAPI(bookDetails, reqHeader) 
+        console.log(result); 
+        const checkoutSessionUrl = result.data.checkoutSessionUrl 
+
+        if (checkoutSessionUrl) {
+          window.location.href = checkoutSessionUrl
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  }
 
 
   useEffect(() => {
@@ -74,7 +101,7 @@ function ViewBook() {
 
               <div className='mt-10 flex justify-end'>
                 <button className='flex px-4 py-3 bg-blue-800 rounded text-white hover:bg-white hover:text-blue-800 hover:border hover:border-blue-800'> <FaBackward className='mt-1 me-2' />Back</button>
-                <button className='px-4 py-3 bg-green-800 rounded text-white hover:bg-white hover:text-green-800 hover:border hover:border-green-800 ms-3'>Buy ₹</button>
+                <button onClick={handlePurchase} className='px-4 py-3 bg-green-800 rounded text-white hover:bg-white hover:text-green-800 hover:border hover:border-green-800 ms-3'>Buy ₹</button>
 
               </div>
             </div>
@@ -115,7 +142,7 @@ function ViewBook() {
 
                 }
 
-                
+
               </div>
             </div>
           </div>
